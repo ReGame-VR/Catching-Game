@@ -19,6 +19,9 @@ public class CatchingGame : MonoBehaviour {
     // The current time in the trial. When this reaches the trial length, reset the trial.
     private float trialTime;
 
+    // The score of the current game
+    private float score = 0f;
+
     // Length of a trial in seconds.
     private float trialLength;
 
@@ -27,6 +30,10 @@ public class CatchingGame : MonoBehaviour {
 
     // time remaining in the countdown at the beginning of the game
     private float countdown = 3f;
+
+    // The canvas that displays things like score to the user
+    [SerializeField]
+    private FeedbackCanvas feedbackCanvas;
 
 	// Use this for initialization
 	void Start () {
@@ -48,17 +55,30 @@ public class CatchingGame : MonoBehaviour {
         }
         else if (curGameState == GameState.GAME)
         {
+            // Update canvas for the user to see score and time remaining
+            timeRemaining = timeRemaining - Time.deltaTime;
+            feedbackCanvas.UpdateTimeText(timeRemaining);
+            feedbackCanvas.UpdateScoreText(score);
+
+            // Update COP and move basket
             Vector2 currentCoP = CoPtoCM(Wii.GetCenterOfBalance(0));
             basket.GetComponent<Basket>().UpdatePosition(currentCoP);
 
+            // tick up trial time and check if a new fruit should be spawned
             trialTime = trialTime + Time.deltaTime;
-
             if (trialTime > trialLength)
             {
+                // play spawn sound
                 fruitSpawner.SpawnFruit();
                 trialTime = 0f;
             }
         }
+    }
+
+    public void CaughtFruit()
+    {
+        // play sound, etc.
+        score = score + 10;
     }
 
     private void SetTrialLength()
@@ -84,7 +104,6 @@ public class CatchingGame : MonoBehaviour {
     /// <returns> The posn, in terms of cm </returns>
     public static Vector2 CoPtoCM(Vector2 posn)
     {
-        Debug.Log(posn);
         return new Vector2(posn.x * 43.3f / 2f, posn.y * 23.6f / 2f);
     }
 }
