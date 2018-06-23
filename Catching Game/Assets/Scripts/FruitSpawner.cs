@@ -22,7 +22,7 @@ public class FruitSpawner : MonoBehaviour {
         Vector3 spawnPos;
         
         // SELECT SPAWN LOCATION
-        if (GlobalControl.Instance.spawnDifficulty == GlobalControl.Difficulty.HARD)
+        if (GlobalControl.Instance.spawnDifficulty > GlobalControl.Difficulty.MEDIUM) // If it is harder than medium
         {
             spawnPos = hardSpawnPositions[Random.Range(0, hardSpawnPositions.Length)].transform.position;
         }
@@ -30,7 +30,7 @@ public class FruitSpawner : MonoBehaviour {
         {
             spawnPos = mediumSpawnPositions[Random.Range(0, mediumSpawnPositions.Length)].transform.position;
         }
-        else
+        else // It is easier than medium
         {
             spawnPos = easySpawnPositions[Random.Range(0, easySpawnPositions.Length)].transform.position;
         }
@@ -38,17 +38,33 @@ public class FruitSpawner : MonoBehaviour {
         GameObject newFruit = Instantiate(fruits[Random.Range(0, fruits.Length)], spawnPos, Quaternion.identity);
         
         // MAKE FRUIT CORRECT SIZE
-        if (GlobalControl.Instance.fruitSize == GlobalControl.Difficulty.HARD)
+        if (GlobalControl.Instance.fruitSize == GlobalControl.Difficulty.EXTREMELY_EASY)
         {
-            newFruit.transform.localScale = new Vector3(newFruit.transform.localScale.x * 0.75f, newFruit.transform.localScale.x * 0.75f);
+            newFruit.transform.localScale = new Vector3(newFruit.transform.localScale.x * 1.3f, newFruit.transform.localScale.x * 1.3f);
+        }
+        else if (GlobalControl.Instance.fruitSize == GlobalControl.Difficulty.VERY_EASY)
+        {
+            newFruit.transform.localScale = new Vector3(newFruit.transform.localScale.x * 1.2f, newFruit.transform.localScale.x * 1.2f);
+        }
+        else if (GlobalControl.Instance.fruitSize == GlobalControl.Difficulty.EASY)
+        {
+            newFruit.transform.localScale = new Vector3(newFruit.transform.localScale.x * 1.1f, newFruit.transform.localScale.x * 1.1f);
         }
         else if (GlobalControl.Instance.fruitSize == GlobalControl.Difficulty.MEDIUM)
         {
             // keep fruit medium sized
         }
-        else
+        else if (GlobalControl.Instance.fruitSize == GlobalControl.Difficulty.HARD)
         {
-            newFruit.transform.localScale = new Vector3(newFruit.transform.localScale.x * 1.25f, newFruit.transform.localScale.x * 1.25f);
+            newFruit.transform.localScale = new Vector3(newFruit.transform.localScale.x * 0.9f, newFruit.transform.localScale.x * 0.9f);
+        }
+        else if (GlobalControl.Instance.fruitSize == GlobalControl.Difficulty.VERY_HARD)
+        {
+            newFruit.transform.localScale = new Vector3(newFruit.transform.localScale.x * 0.8f, newFruit.transform.localScale.x * 0.8f);
+        }
+        else // extremely_hard
+        {
+            newFruit.transform.localScale = new Vector3(newFruit.transform.localScale.x * 0.7f, newFruit.transform.localScale.x * 0.7f);
         }
     }
 }

@@ -13,6 +13,10 @@ public class FeedbackCanvas : MonoBehaviour {
     [SerializeField]
     private Text timeRemainingText;
 
+    // Text displaying countdown
+    [SerializeField]
+    private Text countdownText;
+
     // Update score text with given score
     public void UpdateScoreText(float score)
     {
@@ -23,5 +27,27 @@ public class FeedbackCanvas : MonoBehaviour {
     public void UpdateTimeText(float time)
     {
         timeRemainingText.text = Mathf.Round(time).ToString();
+    }
+
+    // Update time text with given time
+    public void UpdateCountdownText(float countdown)
+    {
+        if (countdown < 0)
+        {
+            countdownText.text = "";
+        }
+        else if (countdown < 1)
+        {
+            countdownText.text = "GO!";
+        }
+        else
+        {
+            countdownText.text = Mathf.Round(countdown).ToString();
+        }
+    }
+
+    public void DisplayGameOverText()
+    {
+        countdownText.text = "Game Over!";
     }
 }

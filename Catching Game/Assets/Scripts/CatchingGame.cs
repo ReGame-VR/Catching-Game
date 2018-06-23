@@ -46,11 +46,14 @@ public class CatchingGame : MonoBehaviour {
         if (curGameState == GameState.PRE_GAME)
         {
             countdown = countdown - Time.deltaTime;
+            feedbackCanvas.UpdateCountdownText(countdown);
 
+            // Start game when countdown hits zero
             if (countdown < 0)
             {
                 curGameState = GameState.GAME;
                 fruitSpawner.SpawnFruit();
+                trialTime = 0;
             }
         }
         else if (curGameState == GameState.GAME)
@@ -72,6 +75,14 @@ public class CatchingGame : MonoBehaviour {
                 fruitSpawner.SpawnFruit();
                 trialTime = 0f;
             }
+
+            if (timeRemaining < 0f)
+            {
+                curGameState = GameState.GAME_OVER;
+                feedbackCanvas.DisplayGameOverText();
+            }
+
+            //TODO Record data continuously
         }
     }
 
@@ -79,21 +90,39 @@ public class CatchingGame : MonoBehaviour {
     {
         // play sound, etc.
         score = score + 10;
+
+        //TODO Record data for this trial
     }
 
     private void SetTrialLength()
     {
-        if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.EASY)
+        if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.EXTREMELY_EASY)
         {
-            trialLength = 5f;
+            trialLength = 2f;
         }
-        else if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.MEDIUM)
+        else if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.VERY_EASY)
+        {
+            trialLength = 2f;
+        }
+        else if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.EASY)
         {
             trialLength = 3f;
         }
-        else
+        else if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.MEDIUM)
+        {
+            trialLength = 2f;
+        }
+        else if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.HARD)
         {
             trialLength = 1f;
+        }
+        else if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.VERY_HARD)
+        {
+            trialLength = 2f;
+        }
+        else // extremely_hard
+        {
+            trialLength = 2f;
         }
     }
 

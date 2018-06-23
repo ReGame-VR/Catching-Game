@@ -26,7 +26,7 @@ public class Basket : MonoBehaviour {
     private float maxYpos = 0;
 
     // The sensitivity of the basket movement
-    private float sensitivity = 0.5f;
+    private float sensitivity = 0.6f;
 	
 	// Update is called once per frame
 	void Update () {
@@ -63,11 +63,86 @@ public class Basket : MonoBehaviour {
     {
         if (c.gameObject.tag == "Fruit")
         {
+            // You caught a fruit! Destroy it, spawn particles, tell game script
             Destroy(c.gameObject);
             Instantiate(heartParticles, transform.position, Quaternion.identity);
             Instantiate(catchParticles, transform.position, Quaternion.identity);
-
             gameScript.CaughtFruit();
+
+            // Lower the basket to make it seem like it caught something
+            GetComponent<SpriteRenderer>().sprite = loweredBasket;
+            StartCoroutine(ResetBasketSprite());
+        }
+    }
+
+    // Raise the basket again. (This is basically an animation)
+    IEnumerator ResetBasketSprite()
+    {
+        yield return new WaitForSeconds(0.15f);
+        GetComponent<SpriteRenderer>().sprite = basket;
+    }
+
+    public void ResizeBasket(GlobalControl.Difficulty difficulty)
+    {
+        if (difficulty == GlobalControl.Difficulty.EXTREMELY_EASY)
+        {
+            transform.localScale = new Vector3(9, 6, 1);
+        }
+        else if (difficulty == GlobalControl.Difficulty.VERY_EASY)
+        {
+            transform.localScale = new Vector3(8, 6, 1);
+        }
+        else if (difficulty == GlobalControl.Difficulty.EASY)
+        {
+            transform.localScale = new Vector3(7, 6, 1);
+        }
+        else if (difficulty == GlobalControl.Difficulty.MEDIUM)
+        {
+            transform.localScale = new Vector3(6, 6, 1);
+        }
+        else if (difficulty == GlobalControl.Difficulty.HARD)
+        {
+            transform.localScale = new Vector3(5, 6, 1);
+        }
+        else if (difficulty == GlobalControl.Difficulty.VERY_HARD)
+        {
+            transform.localScale = new Vector3(4, 6, 1);
+        }
+        else // extremely_hard
+        {
+            transform.localScale = new Vector3(3, 6, 1);
+        }
+    }
+
+    public void AdjustSensitivity(GlobalControl.Difficulty difficulty)
+    {
+        if (difficulty == GlobalControl.Difficulty.EXTREMELY_EASY)
+        {
+            sensitivity = 0.5f;
+        }
+        else if (difficulty == GlobalControl.Difficulty.VERY_EASY)
+        {
+            sensitivity = 0.55f;
+        }
+        else if (difficulty == GlobalControl.Difficulty.EASY)
+        {
+            sensitivity = 0.6f;
+        }
+        else if (difficulty == GlobalControl.Difficulty.MEDIUM)
+        {
+            sensitivity = 0.65f;
+        }
+        else if (difficulty == GlobalControl.Difficulty.HARD)
+        {
+            sensitivity = 0.7f;
+        }
+        else if (difficulty == GlobalControl.Difficulty.VERY_HARD)
+        {
+            sensitivity = 0.75f;
+        }
+        else // extremely_hard
+        {
+            sensitivity = 0.8f;
         }
     }
 }

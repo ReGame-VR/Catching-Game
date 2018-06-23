@@ -19,6 +19,7 @@ public class MenuController : MonoBehaviour {
         GlobalControl.Instance.fallSpeed = GlobalControl.Difficulty.EASY;
         GlobalControl.Instance.userSensitivity = GlobalControl.Difficulty.EASY;
         GlobalControl.Instance.fruitSize = GlobalControl.Difficulty.EASY;
+        GlobalControl.Instance.trialLength = GlobalControl.Difficulty.EASY;
     }
 
     /// <summary>
@@ -47,6 +48,7 @@ public class MenuController : MonoBehaviour {
             GlobalControl.Instance.fallSpeed = GlobalControl.Difficulty.EASY;
             GlobalControl.Instance.userSensitivity = GlobalControl.Difficulty.EASY;
             GlobalControl.Instance.fruitSize = GlobalControl.Difficulty.EASY;
+            GlobalControl.Instance.trialLength = GlobalControl.Difficulty.EASY;
         }
         else if (arg0 == 1)
         {
@@ -55,6 +57,7 @@ public class MenuController : MonoBehaviour {
             GlobalControl.Instance.fallSpeed = GlobalControl.Difficulty.MEDIUM;
             GlobalControl.Instance.userSensitivity = GlobalControl.Difficulty.MEDIUM;
             GlobalControl.Instance.fruitSize = GlobalControl.Difficulty.MEDIUM;
+            GlobalControl.Instance.trialLength = GlobalControl.Difficulty.MEDIUM;
         }
         else if (arg0 == 2)
         {
@@ -63,6 +66,7 @@ public class MenuController : MonoBehaviour {
             GlobalControl.Instance.fallSpeed = GlobalControl.Difficulty.HARD;
             GlobalControl.Instance.userSensitivity = GlobalControl.Difficulty.HARD;
             GlobalControl.Instance.fruitSize = GlobalControl.Difficulty.HARD;
+            GlobalControl.Instance.trialLength = GlobalControl.Difficulty.HARD;
         }
         else
         {
