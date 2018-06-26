@@ -64,10 +64,11 @@ public class Basket : MonoBehaviour {
         if (c.gameObject.tag == "Fruit")
         {
             // You caught a fruit! Destroy it, spawn particles, tell game script
+            gameScript.CaughtFruit(c.gameObject.GetComponent<Fruit>().GetTimeSinceSpawned());
             Destroy(c.gameObject);
             Instantiate(heartParticles, transform.position, Quaternion.identity);
             Instantiate(catchParticles, transform.position, Quaternion.identity);
-            gameScript.CaughtFruit();
+
 
             // Lower the basket to make it seem like it caught something
             GetComponent<SpriteRenderer>().sprite = loweredBasket;
@@ -82,8 +83,10 @@ public class Basket : MonoBehaviour {
         GetComponent<SpriteRenderer>().sprite = basket;
     }
 
-    public void ResizeBasket(GlobalControl.Difficulty difficulty)
+    public void ResizeBasket()
     {
+        GlobalControl.Difficulty difficulty = GlobalControl.Instance.userSize;
+
         if (difficulty == GlobalControl.Difficulty.EXTREMELY_EASY)
         {
             transform.localScale = new Vector3(9, 6, 1);
@@ -114,8 +117,10 @@ public class Basket : MonoBehaviour {
         }
     }
 
-    public void AdjustSensitivity(GlobalControl.Difficulty difficulty)
+    public void AdjustSensitivity()
     {
+        GlobalControl.Difficulty difficulty = GlobalControl.Instance.userSensitivity;
+
         if (difficulty == GlobalControl.Difficulty.EXTREMELY_EASY)
         {
             sensitivity = 0.5f;

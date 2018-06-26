@@ -43,12 +43,12 @@ public class MenuController : MonoBehaviour {
     {
         if (arg0 == 0)
         {
-            GlobalControl.Instance.spawnDifficulty = GlobalControl.Difficulty.EASY;
-            GlobalControl.Instance.userSize = GlobalControl.Difficulty.EASY;
-            GlobalControl.Instance.fallSpeed = GlobalControl.Difficulty.EASY;
-            GlobalControl.Instance.userSensitivity = GlobalControl.Difficulty.EASY;
-            GlobalControl.Instance.fruitSize = GlobalControl.Difficulty.EASY;
-            GlobalControl.Instance.trialLength = GlobalControl.Difficulty.EASY;
+            GlobalControl.Instance.spawnDifficulty = GlobalControl.Difficulty.VERY_EASY;
+            GlobalControl.Instance.userSize = GlobalControl.Difficulty.VERY_EASY;
+            GlobalControl.Instance.fallSpeed = GlobalControl.Difficulty.VERY_EASY;
+            GlobalControl.Instance.userSensitivity = GlobalControl.Difficulty.VERY_EASY;
+            GlobalControl.Instance.fruitSize = GlobalControl.Difficulty.VERY_EASY;
+            GlobalControl.Instance.trialLength = GlobalControl.Difficulty.VERY_EASY;
         }
         else if (arg0 == 1)
         {
@@ -61,12 +61,12 @@ public class MenuController : MonoBehaviour {
         }
         else if (arg0 == 2)
         {
-            GlobalControl.Instance.spawnDifficulty = GlobalControl.Difficulty.HARD;
-            GlobalControl.Instance.userSize = GlobalControl.Difficulty.HARD;
-            GlobalControl.Instance.fallSpeed = GlobalControl.Difficulty.HARD;
-            GlobalControl.Instance.userSensitivity = GlobalControl.Difficulty.HARD;
-            GlobalControl.Instance.fruitSize = GlobalControl.Difficulty.HARD;
-            GlobalControl.Instance.trialLength = GlobalControl.Difficulty.HARD;
+            GlobalControl.Instance.spawnDifficulty = GlobalControl.Difficulty.VERY_HARD;
+            GlobalControl.Instance.userSize = GlobalControl.Difficulty.VERY_HARD;
+            GlobalControl.Instance.fallSpeed = GlobalControl.Difficulty.VERY_HARD;
+            GlobalControl.Instance.userSensitivity = GlobalControl.Difficulty.VERY_HARD;
+            GlobalControl.Instance.fruitSize = GlobalControl.Difficulty.VERY_HARD;
+            GlobalControl.Instance.trialLength = GlobalControl.Difficulty.VERY_HARD;
         }
         else
         {
