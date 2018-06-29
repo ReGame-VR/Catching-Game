@@ -13,13 +13,14 @@ public class MenuController : MonoBehaviour {
     void Start()
     {
         // Set up default values
+        GlobalControl.Instance.explorationMode = GlobalControl.ExplorationMode.NONE;
         RecordTimeLimit(0);
-        GlobalControl.Instance.spawnDifficulty = GlobalControl.Difficulty.EASY;
-        GlobalControl.Instance.userSize = GlobalControl.Difficulty.EASY;
-        GlobalControl.Instance.fallSpeed = GlobalControl.Difficulty.EASY;
-        GlobalControl.Instance.userSensitivity = GlobalControl.Difficulty.EASY;
-        GlobalControl.Instance.fruitSize = GlobalControl.Difficulty.EASY;
-        GlobalControl.Instance.trialLength = GlobalControl.Difficulty.EASY;
+        GlobalControl.Instance.spawnDifficulty = GlobalControl.Difficulty.VERY_EASY;
+        GlobalControl.Instance.userSize = GlobalControl.Difficulty.VERY_EASY;
+        GlobalControl.Instance.fallSpeed = GlobalControl.Difficulty.VERY_EASY;
+        GlobalControl.Instance.userSensitivity = GlobalControl.Difficulty.VERY_EASY;
+        GlobalControl.Instance.fruitSize = GlobalControl.Difficulty.VERY_EASY;
+        GlobalControl.Instance.trialLength = GlobalControl.Difficulty.VERY_EASY;
     }
 
     /// <summary>
@@ -74,11 +75,22 @@ public class MenuController : MonoBehaviour {
         }
     }
 
-    public void RecordTryNumber(string arg0)
+    public void RecordAttemptNumber(string arg0)
     {
-        GlobalControl.Instance.tryNumber = arg0;
+        GlobalControl.Instance.attemptNumber = arg0;
     }
 
+    public void RecordExplorationMode(int arg0)
+    {
+        if (arg0 == 0)
+        {
+            GlobalControl.Instance.explorationMode = GlobalControl.ExplorationMode.NONE;
+        }
+        else
+        {
+            GlobalControl.Instance.explorationMode = GlobalControl.ExplorationMode.FORCED;
+        }
+    }
 
     /// <summary>
     /// Loads next scene if wii is connected and participant ID was entered.

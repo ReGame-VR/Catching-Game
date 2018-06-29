@@ -18,6 +18,9 @@ public class Basket : MonoBehaviour {
     private Sprite basket;
     [SerializeField]
     private Sprite loweredBasket;
+    // The basket looks transparent when it is disabled
+    [SerializeField]
+    private Sprite transparentBasket;
 
     // The maximum positions that the basket is allowed to move
     private float minXpos = -8;
@@ -149,5 +152,17 @@ public class Basket : MonoBehaviour {
         {
             sensitivity = 0.8f;
         }
+    }
+
+    public void DisableBasket()
+    {
+        GetComponent<SpriteRenderer>().sprite = transparentBasket;
+        GetComponent<BoxCollider2D>().enabled = false;
+    }
+
+    public void EnableBasket()
+    {
+        GetComponent<SpriteRenderer>().sprite = basket;
+        GetComponent<BoxCollider2D>().enabled = true;
     }
 }

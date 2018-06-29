@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CatchingGame : MonoBehaviour {
 
@@ -12,9 +13,13 @@ public class CatchingGame : MonoBehaviour {
     [SerializeField]
     private GameObject basket;
 
-    // The player basket 
+    // The object that spawns fruit
     [SerializeField]
     private FruitSpawner fruitSpawner;
+
+    // The obstacle prefab
+    [SerializeField]
+    private GameObject obstacle;
 
     // The current time in the trial. When this reaches the trial length, reset the trial.
     private float trialTime;
@@ -31,9 +36,21 @@ public class CatchingGame : MonoBehaviour {
     // time remaining in the countdown at the beginning of the game
     private float countdown = 3f;
 
+    // The trial number that is currently happening
+    private int trialNum = 1;
+
+    // The number of successes required to spawn an obstacle
+    private int numSuccessesThreshold = 5;
+    // The current number of successes that the user has done. If an obstacle
+    // is spawned, reset this to zero
+    private int numSuccesses;
+
     // The canvas that displays things like score to the user
     [SerializeField]
     private FeedbackCanvas feedbackCanvas;
+
+    // The List of obstacles active in the game
+    List<GameObject> obstacles = new List<GameObject>();
 
 	// Use this for initialization
 	void Start () {
@@ -47,6 +64,9 @@ public class CatchingGame : MonoBehaviour {
         {
             countdown = countdown - Time.deltaTime;
             feedbackCanvas.UpdateCountdownText(countdown);
+
+            Vector2 currentCoP = CoPtoCM(Wii.GetCenterOfBalance(0));
+            basket.GetComponent<Basket>().UpdatePosition(currentCoP);
 
             // Start game when countdown hits zero
             if (countdown < 0)
@@ -67,11 +87,13 @@ public class CatchingGame : MonoBehaviour {
             Vector2 currentCoP = CoPtoCM(Wii.GetCenterOfBalance(0));
             basket.GetComponent<Basket>().UpdatePosition(currentCoP);
 
+            CheckBasketObstacle();
+
             // tick up trial time and check if a new fruit should be spawned
             trialTime = trialTime + Time.deltaTime;
             if (trialTime > trialLength)
             {
-                // play spawn sound
+                GetComponent<SoundEffectPlayer>().PlaySpawnSound();
                 fruitSpawner.SpawnFruit();
                 trialTime = 0f;
             }
@@ -82,7 +104,15 @@ public class CatchingGame : MonoBehaviour {
                 feedbackCanvas.DisplayGameOverText();
             }
 
-            //TODO Record data continuously
+            GetComponent<DataHandler>().recordContinuous(Time.time, currentCoP);
+        }
+        else
+        {
+            // Game is over
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                SceneManager.LoadScene("Menu");
+            }
         }
     }
 
@@ -92,8 +122,22 @@ public class CatchingGame : MonoBehaviour {
     /// <param name="timeSinceSpawned"></param>The time that the fruit spent active
     public void CaughtFruit(float timeSinceSpawned)
     {
-        // TODO play sound
+        GetComponent<SoundEffectPlayer>().PlaySuccessSound();
         score = score + 10;
+
+        numSuccesses++;
+
+        if (GlobalControl.Instance.explorationMode == GlobalControl.ExplorationMode.FORCED)
+        {
+            // Check if an obstacle should be spawned
+            if (numSuccesses > numSuccessesThreshold)
+            {
+                numSuccesses = 0;
+                Instantiate(obstacle, basket.transform.position, Quaternion.identity);
+                GetComponent<DataHandler>().recordExploration(Time.time, basket.transform.position);
+                GetComponent<SoundEffectPlayer>().PlayFailSound();
+            }
+        }
 
         ResetTrial(true, timeSinceSpawned);
     }
@@ -105,6 +149,7 @@ public class CatchingGame : MonoBehaviour {
     public void FruitFell(float timeSinceSpawned)
     {
         ResetTrial(false, timeSinceSpawned);
+        GetComponent<SoundEffectPlayer>().PlayFailSound();
     }
 
     /// <summary>
@@ -114,10 +159,12 @@ public class CatchingGame : MonoBehaviour {
     /// <param name="timeSinceSpawned"></param>The time that the fruit spent active
     private void ResetTrial(bool caught, float timeSinceSpawned)
     {
-        //TODO record data
-
         GlobalControl gc = GlobalControl.Instance;
-        
+
+        GetComponent<DataHandler>().recordTrial(Time.time, trialNum, score, timeSinceSpawned, caught,
+            CoPtoCM(Wii.GetCenterOfBalance(0)), gc.spawnDifficulty, gc.userSize, gc.fallSpeed,
+            gc.userSensitivity, gc.fruitSize, gc.trialLength);
+       
         // Adjust the game parameters slightly for variation
         gc.userSize = gc.PickAppropriateDifficulty(gc.userSize);
         gc.fallSpeed = gc.PickAppropriateDifficulty(gc.fallSpeed);
@@ -128,37 +175,64 @@ public class CatchingGame : MonoBehaviour {
         basket.GetComponent<Basket>().ResizeBasket();
         basket.GetComponent<Basket>().AdjustSensitivity();
         SetTrialLength();
+
+        trialNum++;
     }
 
     private void SetTrialLength()
     {
         if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.EXTREMELY_EASY)
         {
-            trialLength = 3f;
+            trialLength = 5f;
         }
         else if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.VERY_EASY)
         {
-            trialLength = 2.5f;
+            trialLength = 4f;
         }
         else if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.EASY)
         {
-            trialLength = 1.75f;
+            trialLength = 3.75f;
         }
         else if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.MEDIUM)
         {
-            trialLength = 1.5f;
+            trialLength = 3.5f;
         }
         else if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.HARD)
         {
-            trialLength = 1.25f;
+            trialLength = 3.25f;
         }
         else if (GlobalControl.Instance.trialLength == GlobalControl.Difficulty.VERY_HARD)
         {
-            trialLength = 1f;
+            trialLength = 3f;
         }
         else // extremely_hard
         {
-            trialLength = 0.75f;
+            trialLength = 2.75f;
+        }
+    }
+
+    public void AddObstacleToGame(GameObject obstacle)
+    {
+        obstacles.Add(obstacle);
+    }
+
+    private void CheckBasketObstacle()
+    {
+        bool foundBlockingObstacle = false;
+        // Check if basket should be disabled by an obstacle
+        foreach (GameObject obstacle in obstacles)
+        {
+
+            if (Vector2.Distance(basket.transform.position, obstacle.transform.position) < 1.5)
+            {
+                basket.GetComponent<Basket>().DisableBasket();
+                foundBlockingObstacle = true;
+            }
+
+        }
+        if (!foundBlockingObstacle)
+        {
+            basket.GetComponent<Basket>().EnableBasket();
         }
     }
 

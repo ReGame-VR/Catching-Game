@@ -6,6 +6,10 @@
 public class GlobalControl : MonoBehaviour {
 
     public enum Difficulty { EXTREMELY_EASY, VERY_EASY, EASY, MEDIUM, HARD, VERY_HARD, EXTREMELY_HARD };
+    public enum ExplorationMode { NONE, FORCED };
+
+    // the exploration mode of the game
+    public ExplorationMode explorationMode = ExplorationMode.NONE;
 
     // participant ID to differentiate data files
     public string participantID = "";
@@ -17,7 +21,7 @@ public class GlobalControl : MonoBehaviour {
     public float timeLimit = 300f;
 
     // trial number of the current user
-    public string tryNumber = "";
+    public string attemptNumber = "";
 
     // The difficulty of the spawn locations in the game. Hard = more spawn locations
     public Difficulty spawnDifficulty = Difficulty.EASY;
@@ -73,6 +77,38 @@ public class GlobalControl : MonoBehaviour {
         else
         {
             return hard[Random.Range(0, hard.Length)];
+        }
+    }
+
+    public string DifficultyToString(Difficulty difficulty)
+    {
+        if (difficulty == Difficulty.EXTREMELY_EASY)
+        {
+            return "EXTREMELY EASY";
+        }
+        else if (difficulty == Difficulty.VERY_EASY)
+        {
+            return "VERY EASY";
+        }
+        else if (difficulty == Difficulty.EASY)
+        {
+            return "EASY";
+        }
+        else if (difficulty == Difficulty.MEDIUM)
+        {
+            return "MEDIUM";
+        }
+        else if (difficulty == Difficulty.HARD)
+        {
+            return "HARD";
+        }
+        else if (difficulty == Difficulty.VERY_HARD)
+        {
+            return "VERY HARD";
+        }
+        else // extremely_hard
+        {
+            return "EXTREMELY HARD";
         }
     }
 }

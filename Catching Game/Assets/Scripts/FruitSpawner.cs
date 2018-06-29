@@ -73,15 +73,15 @@ public class FruitSpawner : MonoBehaviour {
         // ADJUST FRUIT FALL SPEED
         if (GlobalControl.Instance.fallSpeed == GlobalControl.Difficulty.EXTREMELY_EASY)
         {
-            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * 0.5f);
+            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * 0.75f, ForceMode2D.Impulse);
         }
         else if (GlobalControl.Instance.fallSpeed == GlobalControl.Difficulty.VERY_EASY)
         {
-            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * 0.3f);
+            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * 0.5f, ForceMode2D.Impulse);
         }
         else if (GlobalControl.Instance.fallSpeed == GlobalControl.Difficulty.EASY)
         {
-            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * 0.2f);
+            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * 0.25f, ForceMode2D.Impulse);
         }
         else if (GlobalControl.Instance.fallSpeed == GlobalControl.Difficulty.MEDIUM)
         {
@@ -89,15 +89,15 @@ public class FruitSpawner : MonoBehaviour {
         }
         else if (GlobalControl.Instance.fallSpeed == GlobalControl.Difficulty.HARD)
         {
-            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * -0.2f);
+            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * -1f, ForceMode2D.Impulse);
         }
         else if (GlobalControl.Instance.fallSpeed == GlobalControl.Difficulty.VERY_HARD)
         {
-            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * -0.3f);
+            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * -3f, ForceMode2D.Impulse);
         }
         else // extremely_hard
         {
-            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * -0.5f);
+            newFruit.GetComponent<Rigidbody2D>().AddForce(transform.up * -5f, ForceMode2D.Impulse);
         }
     }
 }

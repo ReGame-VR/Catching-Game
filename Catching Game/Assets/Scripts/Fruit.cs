@@ -9,7 +9,6 @@ public class Fruit : MonoBehaviour {
     private GameObject spawnParticles;
 
     // The main game script for the Catching Game
-    [SerializeField]
     private CatchingGame gameScript;
 
     // The time in seconds that has passed since this fruit was spawned
